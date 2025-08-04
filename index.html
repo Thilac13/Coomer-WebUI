@@ -72,17 +72,17 @@
   <a href="index.html">1</a>
   <a href="page2.html">2</a>
   <a href="page3.html">3</a>
-  <!-- add more links as needed -->
 </div>
+
 <script>
-// ✅ Adjust range per page
 const start = 68000;
 const end = 68009;
 const container = document.getElementById("thumbs");
+let videos = [];
 
-// Autoplay teaser segments
+// ✅ Random teaser segment logic
 function playRandomSegments(video) {
-  let segments = [0, 5, 10];
+  const segments = [0, 5, 10];
   let index = 0;
   video.addEventListener("timeupdate", () => {
     if (video.currentTime >= segments[index] + 5) {
@@ -92,35 +92,47 @@ function playRandomSegments(video) {
   });
 }
 
+// ✅ Create video cards
 for (let i = start; i <= end; i++) {
-  let card = document.createElement("div");
+  const card = document.createElement("div");
   card.className = "card";
 
-  let video = document.createElement("video");
+  const video = document.createElement("video");
   video.src = `https://cdn4.bdsmstreak.com/${i}.mp4`;
   video.muted = true;
   video.playsInline = true;
   video.loop = true;
   video.controls = false;
 
-  // Attempt autoplay via JS
-  video.addEventListener("canplay", () => {
-    video.play().catch(err => {
-      console.log("Autoplay blocked:", err);
-    });
-  });
-
   playRandomSegments(video);
 
-  let label = document.createElement("div");
+  const label = document.createElement("div");
   label.className = "label";
   label.textContent = i;
 
   card.appendChild(video);
   card.appendChild(label);
   container.appendChild(card);
-}
-</script>
 
+  videos.push(video);
+}
+
+// ✅ IntersectionObserver: only play the most visible video
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const vid = entry.target;
+    if (entry.isIntersecting) {
+      // Pause all others first
+      videos.forEach(v => v !== vid && v.pause());
+      // Try to play the one in view
+      vid.play().catch(() => {});
+    } else {
+      vid.pause();
+    }
+  });
+}, { threshold: 0.6 }); // play only if 60% visible
+
+videos.forEach(v => observer.observe(v));
+</script>
 </body>
 </html>
