@@ -1,18 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Thumbnails</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f2f2f7;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1c1c1e;
+    margin-bottom: 10px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: scale(1.03); }
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    background: #e5e5ea;
+  }
+  .label {
+    text-align: center;
+    padding: 6px;
+    font-size: 14px;
+    color: #3a3a3c;
+  }
+</style>
+</head>
 <body>
-<div id="thumbs"></div>
+<h1>📹 Video Thumbnails</h1>
+<div class="grid" id="thumbs"></div>
+
 <script>
+const start = 68000;
+const end = 70000;
 const container = document.getElementById("thumbs");
-for (let i = 68000; i <= 70000; i++) {
-  let url = `https://cdn4.bdsmstreak.com/${i}.mp4`;
+
+for (let i = start; i <= end; i++) {
+  let card = document.createElement("div");
+  card.className = "card";
+
   let video = document.createElement("video");
-  video.src = url;
-  video.muted = true;
-  video.width = 160;
-  video.controls = false;
+  video.src = `https://cdn4.bdsmstreak.com/${i}.mp4`;
   video.preload = "metadata";
-  container.appendChild(video);
+  video.muted = true;
+  video.playsInline = true;
+  video.controls = false;
+
+  // Load only metadata → display first frame
+  video.addEventListener("loadeddata", () => {
+    video.currentTime = 0.1; 
+  }, { once: true });
+
+  let label = document.createElement("div");
+  label.className = "label";
+  label.textContent = i;
+
+  card.appendChild(video);
+  card.appendChild(label);
+  container.appendChild(card);
 }
 </script>
 </body>
