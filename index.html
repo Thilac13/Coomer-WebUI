@@ -74,7 +74,6 @@
   <a href="page3.html">3</a>
   <!-- add more links as needed -->
 </div>
-
 <script>
 // ✅ Adjust range per page
 const start = 68000;
@@ -102,8 +101,14 @@ for (let i = start; i <= end; i++) {
   video.muted = true;
   video.playsInline = true;
   video.loop = true;
-  video.autoplay = true;
   video.controls = false;
+
+  // Attempt autoplay via JS
+  video.addEventListener("canplay", () => {
+    video.play().catch(err => {
+      console.log("Autoplay blocked:", err);
+    });
+  });
 
   playRandomSegments(video);
 
@@ -116,5 +121,6 @@ for (let i = start; i <= end; i++) {
   container.appendChild(card);
 }
 </script>
+
 </body>
 </html>
