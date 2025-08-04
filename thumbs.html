@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="thumbs"></div>
+<script>
+const container = document.getElementById("thumbs");
+for (let i = 68000; i <= 70000; i++) {
+  let url = `https://cdn4.bdsmstreak.com/${i}.mp4`;
+  let video = document.createElement("video");
+  video.src = url;
+  video.muted = true;
+  video.width = 160;
+  video.controls = false;
+  video.preload = "metadata";
+  container.appendChild(video);
+}
+</script>
+</body>
+</html>
