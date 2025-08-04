@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Teasers – Page 1</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f2f2f7;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1c1c1e;
+    margin-bottom: 10px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: scale(1.03); }
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    background: #e5e5ea;
+  }
+  .label {
+    text-align: center;
+    padding: 6px;
+    font-size: 14px;
+    color: #3a3a3c;
+  }
+  .pagination {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .pagination a {
+    background: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-decoration: none;
+    color: #007aff;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+</style>
+</head>
+<body>
+<h1>📹 Video Teasers (68000–68009)</h1>
+<div class="grid" id="thumbs"></div>
+
+<div class="pagination">
+  <a href="index.html">1</a>
+  <a href="page2.html">2</a>
+  <a href="page3.html">3</a>
+  <!-- add more links as needed -->
+</div>
+
+<script>
+// ✅ Adjust range per page
+const start = 68000;
+const end = 68009;
+const container = document.getElementById("thumbs");
+
+// Autoplay teaser segments
+function playRandomSegments(video) {
+  let segments = [0, 5, 10];
+  let index = 0;
+  video.addEventListener("timeupdate", () => {
+    if (video.currentTime >= segments[index] + 5) {
+      index = (index + 1) % segments.length;
+      video.currentTime = segments[index];
+    }
+  });
+}
+
+for (let i = start; i <= end; i++) {
+  let card = document.createElement("div");
+  card.className = "card";
+
+  let video = document.createElement("video");
+  video.src = `https://cdn4.bdsmstreak.com/${i}.mp4`;
+  video.muted = true;
+  video.playsInline = true;
+  video.loop = true;
+  video.autoplay = true;
+  video.controls = false;
+
+  playRandomSegments(video);
+
+  let label = document.createElement("div");
+  label.className = "label";
+  label.textContent = i;
+
+  card.appendChild(video);
+  card.appendChild(label);
+  container.appendChild(card);
+}
+</script>
+</body>
+</html>
